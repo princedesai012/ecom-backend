@@ -16,14 +16,20 @@ exports.getAllProducts = async (req, res) => {
 
   exports.createProduct = async (req, res) => {
     try {
-      const { name, price } = req.body;
-      const image = req.file.path; // Cloudinary URL
+      const { name, price, image } = req.body;
+  
+      if (!name || !price || !image) {
+        return res.status(400).json({ message: 'All fields are required' });
+      }
+  
       const product = await Product.create({ name, price, image });
       res.status(201).json(product);
     } catch (err) {
-      res.status(400).json({ error: err.message });
+      console.error('Error creating product:', err);
+      res.status(400).json({ message: err.message });
     }
   };
+  
   
   
 
